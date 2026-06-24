@@ -1,6 +1,22 @@
 let current = 0;
 let score = 0;
 let answered = false;
+let timeLeft = 180 * 60; // 180 minutes
+
+// Timer
+setInterval(() => {
+
+    let mins = Math.floor(timeLeft / 60);
+    let secs = timeLeft % 60;
+
+    document.getElementById("timer").innerHTML =
+        `${mins}:${secs.toString().padStart(2, '0')}`;
+
+    if (timeLeft > 0) {
+        timeLeft--;
+    }
+
+}, 1000);
 
 function loadQuestion() {
 
@@ -29,19 +45,6 @@ function loadQuestion() {
     });
 
     document.getElementById("options").innerHTML = html;
-    let timeLeft = 180 * 60;
-
-    setInterval(() => {
-
-      let mins = Math.floor(timeLeft / 60);
-      let secs = timeLeft % 60;
-
-      document.getElementById("timer").innerHTML =
-        `${mins}:${secs.toString().padStart(2,'0')}`;
-
-      timeLeft--;
-
-     },1000);
 
     let percent =
         ((current + 1) / questions.length) * 100;
@@ -64,20 +67,33 @@ function checkAnswer() {
 
     answered = true;
 
+    // Highlight Correct Answer
+    document
+        .querySelectorAll('input[name="ans"]')
+        .forEach(radio => {
+
+            if (radio.value === questions[current].answer) {
+                radio.parentElement.style.background =
+                    "#d1fae5";
+            }
+        });
+
     if (selected.value === questions[current].answer) {
 
         score++;
 
+        document.getElementById("score").innerText = score;
+
         document.getElementById("result").innerHTML =
-            "<h3 style='color:green'>✅ Correct</h3>";
+            "<h3 style='color:green'>✅ Correct Answer</h3>";
 
     } else {
 
         document.getElementById("result").innerHTML =
             `<h3 style='color:red'>
-            ❌ Wrong<br>
-            Correct Answer:
-            ${questions[current].answer}
+                ❌ Wrong Answer
+                <br>
+                Correct Answer: ${questions[current].answer}
             </h3>`;
     }
 
@@ -87,6 +103,11 @@ function checkAnswer() {
 }
 
 function nextQuestion() {
+
+    if (!answered) {
+        alert("Please click Check Answer first");
+        return;
+    }
 
     current++;
 
@@ -99,7 +120,11 @@ function nextQuestion() {
         let percentage =
             ((score / questions.length) * 100).toFixed(2);
 
+        let status =
+            percentage >= 70 ? "PASS ✅" : "FAIL ❌";
+
         document.body.innerHTML = `
+
         <div class="container">
 
             <h1>Exam Completed</h1>
@@ -108,7 +133,10 @@ function nextQuestion() {
 
             <h2>${percentage}%</h2>
 
+            <h1>${status}</h1>
+
         </div>
+
         `;
     }
 }
