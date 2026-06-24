@@ -4,19 +4,26 @@ let answered = false;
 let timeLeft = 180 * 60; // 180 minutes
 
 // Timer
-setInterval(() => {
+function startTimer() {
 
-    let mins = Math.floor(timeLeft / 60);
-    let secs = timeLeft % 60;
+    const timer = setInterval(() => {
 
-    document.getElementById("timer").innerHTML =
-        `${mins}:${secs.toString().padStart(2, '0')}`;
+        let mins = Math.floor(timeLeft / 60);
+        let secs = timeLeft % 60;
 
-    if (timeLeft > 0) {
+        document.getElementById("timer").innerText =
+            `${mins}:${secs.toString().padStart(2, '0')}`;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            alert("Time Up!");
+            return;
+        }
+
         timeLeft--;
-    }
 
-}, 1000);
+    }, 1000);
+}
 
 function loadQuestion() {
 
@@ -49,8 +56,8 @@ function loadQuestion() {
     let percent =
         ((current + 1) / questions.length) * 100;
 
-    document.getElementById("progressBar")
-        .style.width = percent + "%";
+    document.getElementById("progressBar").style.width =
+        percent + "%";
 }
 
 function checkAnswer() {
@@ -67,7 +74,6 @@ function checkAnswer() {
 
     answered = true;
 
-    // Highlight Correct Answer
     document
         .querySelectorAll('input[name="ans"]')
         .forEach(radio => {
@@ -91,10 +97,9 @@ function checkAnswer() {
 
         document.getElementById("result").innerHTML =
             `<h3 style='color:red'>
-                ❌ Wrong Answer
-                <br>
-                Correct Answer: ${questions[current].answer}
-            </h3>`;
+             ❌ Wrong Answer<br>
+             Correct Answer: ${questions[current].answer}
+             </h3>`;
     }
 
     document.getElementById("explanation").innerHTML =
@@ -124,7 +129,6 @@ function nextQuestion() {
             percentage >= 70 ? "PASS ✅" : "FAIL ❌";
 
         document.body.innerHTML = `
-
         <div class="container">
 
             <h1>Exam Completed</h1>
@@ -136,9 +140,9 @@ function nextQuestion() {
             <h1>${status}</h1>
 
         </div>
-
         `;
     }
 }
 
 loadQuestion();
+startTimer();
