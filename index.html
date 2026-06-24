@@ -1,15 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MCQ Exam</title>
+    <title>AWS Mock Exam</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h2 id="question"></h2>
+<div class="container">
 
-<div id="options"></div>
+    <h1>AWS DevOps Mock Exam</h1>
 
-<button onclick="submitAnswer()">Next</button>
+    <div id="questionCounter"></div>
+
+    <div class="progress">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <h2 id="question"></h2>
+
+    <div id="options"></div>
+
+    <button onclick="checkAnswer()">Check Answer</button>
+    <button onclick="nextQuestion()">Next</button>
+
+    <div id="result"></div>
+
+    <div id="explanation"></div>
+
+</div>
 
 <script src="questions.js"></script>
 <script src="app.js"></script>

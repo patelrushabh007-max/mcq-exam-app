@@ -1,48 +1,103 @@
 let current = 0;
 let score = 0;
+let answered = false;
 
 function loadQuestion() {
 
-  const q = questions[current];
+    answered = false;
 
-  document.getElementById("question").innerText = q.q;
+    const q = questions[current];
 
-  let html = "";
+    document.getElementById("questionCounter").innerHTML =
+        `Question ${current + 1} of ${questions.length}`;
 
-  q.options.forEach(opt => {
-    html += `
-      <label>
-        <input type="radio" name="ans" value="${opt[0]}">
-        ${opt}
-      </label><br><br>
-    `;
-  });
+    document.getElementById("question").innerText = q.q;
 
-  document.getElementById("options").innerHTML = html;
+    document.getElementById("result").innerHTML = "";
+    document.getElementById("explanation").innerHTML = "";
+
+    let html = "";
+
+    q.options.forEach(opt => {
+
+        html += `
+        <label class="option">
+            <input type="radio" name="ans" value="${opt[0]}">
+            ${opt}
+        </label>
+        `;
+    });
+
+    document.getElementById("options").innerHTML = html;
+
+    let percent =
+        ((current + 1) / questions.length) * 100;
+
+    document.getElementById("progressBar")
+        .style.width = percent + "%";
 }
 
-function submitAnswer() {
+function checkAnswer() {
 
-  const selected =
-      document.querySelector('input[name="ans"]:checked');
+    if (answered) return;
 
-  if (!selected) {
-      alert("Select answer");
-      return;
-  }
+    const selected =
+        document.querySelector('input[name="ans"]:checked');
 
-  if (selected.value === questions[current].answer) {
-      score++;
-  }
+    if (!selected) {
+        alert("Please select an answer");
+        return;
+    }
 
-  current++;
+    answered = true;
 
-  if (current < questions.length) {
-      loadQuestion();
-  } else {
-      document.body.innerHTML =
-          `<h1>Score: ${score}/${questions.length}</h1>`;
-  }
+    if (selected.value === questions[current].answer) {
+
+        score++;
+
+        document.getElementById("result").innerHTML =
+            "<h3 style='color:green'>✅ Correct</h3>";
+
+    } else {
+
+        document.getElementById("result").innerHTML =
+            `<h3 style='color:red'>
+            ❌ Wrong<br>
+            Correct Answer:
+            ${questions[current].answer}
+            </h3>`;
+    }
+
+    document.getElementById("explanation").innerHTML =
+        `<b>Explanation:</b><br>
+         ${questions[current].explanation}`;
+}
+
+function nextQuestion() {
+
+    current++;
+
+    if (current < questions.length) {
+
+        loadQuestion();
+
+    } else {
+
+        let percentage =
+            ((score / questions.length) * 100).toFixed(2);
+
+        document.body.innerHTML = `
+        <div class="container">
+
+            <h1>Exam Completed</h1>
+
+            <h2>Score: ${score}/${questions.length}</h2>
+
+            <h2>${percentage}%</h2>
+
+        </div>
+        `;
+    }
 }
 
 loadQuestion();
