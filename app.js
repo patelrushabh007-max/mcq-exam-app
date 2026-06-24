@@ -29,6 +29,19 @@ function loadQuestion() {
     });
 
     document.getElementById("options").innerHTML = html;
+    let timeLeft = 180 * 60;
+
+    setInterval(() => {
+
+      let mins = Math.floor(timeLeft / 60);
+      let secs = timeLeft % 60;
+
+      document.getElementById("timer").innerHTML =
+        `${mins}:${secs.toString().padStart(2,'0')}`;
+
+      timeLeft--;
+
+     },1000);
 
     let percent =
         ((current + 1) / questions.length) * 100;
