@@ -1,29 +1,6 @@
 let current = 0;
 let score = 0;
 let answered = false;
-let timeLeft = 180 * 60; // 180 minutes
-
-// Timer
-function startTimer() {
-
-    const timer = setInterval(() => {
-
-        let mins = Math.floor(timeLeft / 60);
-        let secs = timeLeft % 60;
-
-        document.getElementById("timer").innerText =
-            `${mins}:${secs.toString().padStart(2, '0')}`;
-
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            alert("Time Up!");
-            return;
-        }
-
-        timeLeft--;
-
-    }, 1000);
-}
 
 function loadQuestion() {
 
